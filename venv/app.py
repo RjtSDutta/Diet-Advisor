@@ -14,12 +14,7 @@ def is_valid_email(email):
     email_pattern = re.compile(r'^[\w\.-]+@[\w\.-]+\.\w+$')
     return bool(re.match(email_pattern, email))
 
-def db_print():
-    users = User.query.all()
 
-    # Print user details
-    for user in users:
-        print(f"email: {user.email}, Password: {user.password}")
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
