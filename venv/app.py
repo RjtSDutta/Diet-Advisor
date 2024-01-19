@@ -178,10 +178,6 @@ def users(email):
 def dashboard():
     return render_template('dashboard.html')
 
-@app.route('/logout')
-def logout():
-    return render_template('logout.html')
-
 @app.route('/calorie', methods=['GET', 'POST'])
 def calorie():
     if request.method == 'POST':
