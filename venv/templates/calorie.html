@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Document</title>
+</head>
+
+<body class="bg-cyan-900 text-white flex flex-col min-h-screen">
+    <main class="flex-1">
+        <section class="flex items-center justify-center min-h-screen h-full">
+            <div class="space-y-6 w-full max-w-md">
+                <div class="flex justify-center">
+                    <a class="flex gap-1 items-center" href="/">
+                        <img class="mix-blend-darken"
+                            src="../static/bodybuilder-strong-man-black-silhouette-design-vector-40588031.webp"
+                            alt="LOGO" height="60" width="60">
+                    </a>
+                </div>
+                <h1 class="text-2xl font-bold flex justify-center">Maintenance Calorie Calculator</h1>
+                <div class="bg-white border border-black/10 rounded-lg p-5 text-black space-y-6 w-full">
+                    <form method="post" id="calorie_calculator">
+                        <div class="flex flex-col gap-4 items-center">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Select Exercise Level:</label>
+                            <div class="flex gap-2 items-center flex-wrap justify-center">
+                                <div>
+                                    <input type="radio" id="no_exercise" name="exercise_level" value="no_exercise"
+                                        class="">
+                                    <label for="no_exercise" class="">No Exercise</label>
+                                </div>
+                                <div>
+                                    <input type="radio" id="light" name="exercise_level" value="light" class="">
+                                    <label for="light" class="">Light Exercise</label>
+                                </div>
+                                <div>
+                                    <input type="radio" id="moderate" name="exercise_level" value="moderate" class="">
+                                    <label for="moderate" class="">Moderate Exercise</label>
+                                </div>
+                                <div>
+                                    <input type="radio" id="heavy" name="exercise_level" value="heavy" class="">
+                                    <label for="heavy" class="">Heavy Exercise</label>
+                                </div>
+                                <div>
+                                    <input type="radio" id="very_heavy" name="exercise_level" value="very_heavy"
+                                        class="">
+                                    <label for="very_heavy">Very Heavy Exercise</label>
+                                </div>
+                            </div>
+                            <div class="bg-gray-200 rounded-md p-5 w-full text-center space-y-2 hidden" id="result">
+                                <p class="text-gray-700 text-sm">
+                                    Your Maintenance Calorie
+                                <p id="maintenance_calorie" class="text-xl font-bold"></p>
+                                </p>
+                                <p>
+                                    For Weight Gain +250 calories
+                                </p>
+                                <p>
+                                    For Weight Loss -250 calories
+                                </p>
+                            </div>
+                            <div class="flex gap-2 justify-center">
+                                <button type="submit" id="calculate"
+                                    class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Calculate</button>
+                                <button class="bg-slate-500 text-white px-4 py-2 rounded hover:bg-slate-700 hidden"
+                                    type="button" id="back">
+                                    Back
+                                </button>
+                                <button class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700 hidden"
+                                    type="button" id="proceed">
+                                    Proceed
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+        </section>
+    </main>
+
+    <script>
+        const form = document.getElementById('calorie_calculator')
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault()
+            const formData = new FormData(form)
+            const email = localStorage.getItem('email')
+            formData.append('email', email)
+            fetch('http://localhost:5000/calorie', {
+                body: formData,
+                method: 'POST',
+            })
+                .then(async (res) => {
+                    if (!res.ok) {
+                        const data = await res.json()
+                        throw new Error(data.error)
+                    }
+
+                    const data = await res.json()
+                    const calculate = document.getElementById('calculate')
+                    calculate.classList.add('hidden')
+                    const back = document.getElementById('back')
+                    const proceed = document.getElementById('proceed')
+                    proceed.classList.remove('hidden')
+                    back.classList.remove('hidden')
+                    const result = document.getElementById('result')
+                    result.classList.remove('hidden')
+
+                    const maintenanceCalorie = document.getElementById('maintenance_calorie')
+                    maintenanceCalorie.innerText = data.m_cal
+                    localStorage.setItem(
+                        'maintenance_calorie',
+                        data.m_cal
+                    )
+                })
+                .catch((err) => {
+                    console.error(err)
+                    if (err instanceof Error)
+                        alert(err.message)
+                    else
+                        alert('Something went wrong')
+                })
+        })
+    </script>
+
+    <script>
+        const back = document.getElementById('back')
+        back.addEventListener('click', () => {
+            window.location.href = '/dashboard'
+        })
+
+        const proceed = document.getElementById('proceed')
+        proceed.addEventListener('click', () => {
+            window.location.href = '/diet'
+        })
+    </script>
+</body>

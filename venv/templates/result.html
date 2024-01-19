@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='result.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='background.css')}}">
+    <title>Result</title>
+</head>
+<body>
+    <div class="result-container">
+        <h2 class="result-label">Result</h2> <!-- "Result" label on a separate line -->
+        <div class="calculated-result">
+            <p>The calculated result is:</p> <!-- Additional label or description -->
+            <p>{{ result }}</p> <!-- Display the calculated result -->
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<body>
+    <!-- "Return to Home" button -->
+    <div style="position: fixed; bottom: 10px; right: 10px;">
+        <a href="{{ url_for('index') }}">Return to Home</a>
+    </div>
+</body>
+</html>

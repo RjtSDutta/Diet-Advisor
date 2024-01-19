@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Document</title>
+</head>
+
+<body class="bg-cyan-900 text-white flex flex-col min-h-screen">
+
+    <main class="flex-1">
+        <section class="p-5 flex flex-col gap-5 justify-center items-center min-h-screen h-full">
+            <div>
+                <a class="flex gap-1 items-center" href="/">
+                    <img class="mix-blend-darken"
+                        src="../static/bodybuilder-strong-man-black-silhouette-design-vector-40588031.webp" alt="LOGO"
+                        height="60" width="60">
+                </a>
+            </div>
+            <div class="bg-white border border-black/10 rounded-lg p-5 text-black space-y-6 max-w-sm w-full">
+                <div class="space-y-1">
+                    <h1 class="text-3xl font-semibold">Login</h1>
+                    <p class="text-black/75 text-xs md:text-sm">
+                        <span>
+                            Don't have an account?
+                        </span>
+                        <a href="/register" class="underline text-blue-700">Register</a>
+                    </p>
+                </div>
+
+                <form method="post" class="space-y-6" id="login_form">
+                    <div class="space-y-4">
+                        <div class="flex flex-col gap-1">
+                            <label for="email" class="font-medium text-sm">Email</label>
+                            <input type="email" id="email" name="email"
+                                class="bg-gray-200 p-2 border border-black/10 rounded-md focus:outline-black/20 text-sm">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label for="password" class="font-medium text-sm">Password</label>
+                            <input type="password" id="password" name="password"
+                                class="bg-gray-200 p-2 border border-black/10 rounded-md focus:outline-black/20 text-sm">
+                        </div>
+                    </div>
+                    <input type="submit" value="Login" class="font-medium bg-blue-400 rounded-md p-2 w-full">
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const existingEmail = localStorage.getItem('email')
+            if (existingEmail) {
+                window.location.href = '/dashboard'
+            }
+        })
+    </script>
+
+
+    <script>
+        const form = document.getElementById('login_form')
+        form.addEventListener('submit', (e) => {
+            e.preventDefault()
+            const formdata = new FormData(form)
+            fetch('http://localhost:5000/login', {
+                body: formdata,
+                method: 'POST',
+            })
+                .then(async (res) => {
+                    if (!res.ok) {
+                        const data = await res.json()
+                        throw new Error(data.error)
+                    }
+
+                    const data = await res.json()
+                    localStorage.setItem('email', data)
+                    window.location.href = '/dashboard'
+                })
+
+                .catch((err) => {
+                    console.error(err)
+                    if (err instanceof Error)
+                        alert(err.message)
+                    else
+                        alert('Something went wrong')
+                })
+        })
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

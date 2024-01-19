@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Document</title>
+</head>
+
+<body class="bg-cyan-900 text-white flex flex-col min-h-screen">
+    <main class="flex-1">
+        <section class="flex items-center justify-center min-h-screen h-full">
+            <div class="space-y-6">
+                <div class="flex justify-center">
+                    <a class="flex gap-1 items-center" href="/">
+                        <img class="mix-blend-darken"
+                            src="../static/bodybuilder-strong-man-black-silhouette-design-vector-40588031.webp"
+                            alt="LOGO" height="60" width="60">
+                    </a>
+                </div>
+                <h1 class="text-center text-2xl md:text-4xl font-bold">Your Profile</h1>
+                <div class="bg-white border border-black/10 rounded-lg p-5 text-black space-y-6 max-w-2xl w-full">
+
+                    <form method="post" class="space-y-6 text-black" id="profile_form">
+                        <div class="space-y-4">
+                            <div class="flex gap-4">
+                                <div class="flex flex-col gap-1">
+                                    <label for="name" class="font-medium text-sm">First Name</label>
+                                    <input type="text" id="name" name="name"
+                                        class="bg-gray-200 p-2 border border-black/10 rounded-md focus:outline-black/20 text-sm">
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <label for="surname" class="font-medium text-sm">Last Name</label>
+                                    <input type="text" id="surname" name="surname"
+                                        class="bg-gray-200 p-2 border border-black/10 rounded-md focus:outline-black/20 text-sm">
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <label for="age" class="font-medium text-sm">Age</label>
+                                <input type="number" id="age" name="age"
+                                    class="bg-gray-200 p-2 border border-black/10 rounded-md focus:outline-black/20 text-sm">
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <label class="font-medium text-sm">Sex</label>
+                                <div class="flex gap-4">
+                                    <label>
+                                        <input type="radio" name="sex" value="male"
+                                            class="bg-gray-200 p-2 border border-black/10 rounded-md focus:outline-black/20 text-sm">
+                                        Male
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="sex" value="female"
+                                            class="bg-gray-200 p-2 border border-black/10 rounded-md focus:outline-black/20 text-sm">
+                                        Female
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="flex gap-4">
+                                <div class="flex flex-col gap-1">
+                                    <label for="height" class="font-medium text-sm">Height (cm)</label>
+                                    <input type="number" id="height" name="height"
+                                        class="bg-gray-200 p-2 border border-black/10 rounded-md focus:outline-black/20 text-sm">
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <label for="weight" class="font-medium text-sm">Weight (kg)</label>
+                                    <input type="number" id="weight" name="weight"
+                                        class="bg-gray-200 p-2 border border-black/10 rounded-md focus:outline-black/20 text-sm">
+                                </div>
+                            </div>
+                            <div class="flex gap-4">
+                                <div class="flex flex-col gap-1 p-4 rounded-md bg-gray-300 text-center w-full hidden"
+                                    id="bmi_div">
+                                    <p class="font-medium text-sm text-black/80">BMI</p>
+                                    <p id="bmi" class="font-bold text-xl"></p>
+                                </div>
+                                <div class="flex flex-col gap-1 p-4 rounded-md bg-gray-300 text-center w-full hidden"
+                                    id="bmr_div">
+                                    <p class="font-medium text-sm text-black/80">BMR</p>
+                                    <p id="bmr" class="font-bold text-xl"></p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-1 p-4 rounded-md bg-gray-300 text-center w-full hidden"
+                                id="msg_div">
+                                <p id="msg" class="text-sm font-semibold"></p>
+                            </div>
+                        </div>
+                        <input type="submit" value="Submit" class="font-medium bg-blue-400 rounded-md p-2 w-full"
+                            id="submit_btn">
+                        <button class="font-medium bg-green-400 rounded-md p-2 w-full hidden" id="proceed_btn">
+                            Proceed
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const nameInput = document.getElementById('name')
+            const surnameInput = document.getElementById('surname')
+            const ageInput = document.getElementById('age')
+            const heightInput = document.getElementById('height')
+            const weightInput = document.getElementById('weight')
+            const userEmail = localStorage.getItem('email')
+
+            fetch('http://localhost:5000/users/' + userEmail)
+                .then(async (res) => {
+                    const data = await res.json()
+                    nameInput.value = data?.name ?? ''
+                    surnameInput.value = data?.surname ?? ''
+                    ageInput.value = data?.age ?? ''
+                    heightInput.value = data?.height ?? ''
+                    weightInput.value = data?.weight ?? ''
+
+                    if (data?.sex === 'male') {
+                        document.querySelector('input[name="sex"][value="male"]').checked = true
+                    } else if (data?.sex === 'female') {
+                        document.querySelector('input[name="sex"][value="female"]').checked = true
+                    }
+                })
+        })
+    </script>
+
+    <script>
+        const form = document.getElementById('profile_form')
+        form.addEventListener('submit', (e) => {
+            e.preventDefault()
+            const formdata = new FormData(form)
+            formdata.append('email', localStorage.getItem('email'))
+            fetch('http://localhost:5000/profile', {
+                body: formdata,
+                method: 'POST',
+            })
+                .then(async (res) => {
+                    if (!res.ok) {
+                        const data = await res.json()
+                        throw new Error(data.error)
+                    }
+
+                    const data = await res.json()
+
+                    const bmiDiv = document.getElementById('bmi_div')
+                    const bmrDiv = document.getElementById('bmr_div')
+                    const msgDiv = document.getElementById('msg_div')
+                    const submitBtn = document.getElementById('submit_btn')
+                    const proceedBtn = document.getElementById('proceed_btn')
+
+                    submitBtn.classList.add('hidden')
+                    proceedBtn.classList.remove('hidden')
+
+                    bmrDiv.classList.remove('hidden')
+                    bmiDiv.classList.remove('hidden')
+                    msgDiv.classList.remove('hidden')
+
+
+                    const bmi = document.getElementById('bmi')
+                    const bmr = document.getElementById('bmr')
+                    const msg = document.getElementById('msg')
+
+                    bmi.innerText = data.bmi
+                    bmr.innerText = data.bmr
+                    msg.innerText = data.msg
+                })
+                .catch((err) => {
+                    console.error(err)
+                    if (err instanceof Error)
+                        alert(err.message)
+                    else
+                        alert('Something went wrong')
+                })
+        })
+    </script>
+    <script>
+        const proceedBtn = document.getElementById('proceed_btn')
+        proceedBtn.addEventListener('click', () => {
+            window.location.href = '/dashboard'
+        })
+    </script>
+</body>
+
+</html>

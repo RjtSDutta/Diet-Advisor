@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Document</title>
+</head>
+
+<body class="bg-cyan-900 text-white flex flex-col min-h-screen">
+    <header>
+        <nav class="bg-blue-200 text-black flex justify-center py-2">
+            <div class="max-w-7xl w-full flex items-center justify-between">
+                <a class="flex gap-1 items-center" href="/">
+                    <img class="mix-blend-darken"
+                        src="../static/bodybuilder-strong-man-black-silhouette-design-vector-40588031.webp" alt="LOGO"
+                        height="30" width="30">
+                    <h2 class="font-semibold text-lg">BulkMeUp</h2>
+                </a>
+                <div class="flex gap-4">
+                    <!-- <a class="rounded-md font-semibold" href="/login">Login</a> -->
+                    <a class="rounded-md font-semibold flex items-center gap-2" href="/profile">
+                        <div class="size-6 rounded-full overflow-hidden">
+                            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                                alt="pfp">
+                        </div>
+                        <p id="profile" class="text-black"></p>
+                    </a>
+
+                    <button id="logout">
+                        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828479.png" alt="logout" height="18"
+                            width="18">
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+    </header>
+
+
+    <main class="flex-1 flex justify-center items-center">
+        <section class="p-5 w-full flex justify-center">
+            <div class="flex gap-24 max-w-4xl w-full items-center">
+                <a href="/calorie"
+                    class="bg-white rounded-md p-5 text-black text-center w-full font-semibold aspect-square flex items-center justify-center text-4xl">
+                    <p>Maintenance Calorie</p>
+                </a>
+                <a href="/diet"
+                    class="bg-white rounded-md p-5 text-black text-center w-full font-semibold aspect-square flex items-center justify-center text-4xl">
+                    <p>Diet Chart</p>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const existingEmail = localStorage.getItem('email')
+            if (!existingEmail) {
+                window.location.href = '/login'
+            }
+        })
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const logout = document.getElementById('logout')
+
+            logout.addEventListener('click', () => {
+                localStorage.removeItem('email')
+                window.location.href = '/login'
+            })
+        })
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const profile = document.getElementById('profile')
+            const userEmail = localStorage.getItem('email')
+
+            fetch('http://localhost:5000/users/' + userEmail)
+                .then(async (res) => {
+                    const data = await res.json()
+
+                    profile.innerText = data.name
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        })
+    </script>
+</body>
