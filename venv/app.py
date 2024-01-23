@@ -61,7 +61,7 @@ def login():
             return jsonify(email)
         else:
             # Login failed
-            error_response = jsonify({'error': 'User not found'})
+            error_response = jsonify({'error': 'User not found / Invalid password'})
             error_response.status_code = 404
             return error_response
 
