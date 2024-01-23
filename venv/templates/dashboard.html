@@ -69,6 +69,7 @@
 
             logout.addEventListener('click', () => {
                 localStorage.removeItem('email')
+                localStorage.removeItem('maintenance_calorie')
                 window.location.href = '/login'
             })
         })
